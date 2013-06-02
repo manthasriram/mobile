@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.batterymonitor"
     android:versionCode="1"
-    android:versionName="1.0" >
-
-    <uses-sdk
+    android:versionName="1.0" ><uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
@@ -22,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="BatteryMonitorService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_name" >
+        </service>
     </application>
 
 </manifest>

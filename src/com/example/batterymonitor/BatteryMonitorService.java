@@ -2,27 +2,33 @@ package com.example.batterymonitor;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
-import android.widget.Toast;
+import android.util.Log;
 
 public class BatteryMonitorService extends Service {
+	
+	AlarmMonitor m = new AlarmMonitor();
+	BatteryInfoReceiver batteryInfoReceiver = new BatteryInfoReceiver();
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// Let it continue running until it is stopped.
-		Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+		Log.i("BatteryMonitorService", "Service Started");
+        m.SetAlarm(getApplicationContext());
+        registerReceiver(batteryInfoReceiver, new IntentFilter(
+                Intent.ACTION_BATTERY_CHANGED));
 		return START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
+		Log.i("BatteryMonitorService", "Service destroyed");
+		unregisterReceiver(batteryInfoReceiver);
 	}
 }
