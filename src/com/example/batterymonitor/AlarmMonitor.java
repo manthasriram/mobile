@@ -2,11 +2,8 @@ package com.example.batterymonitor;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.PowerManager;
 import android.util.Log;
 
 public class AlarmMonitor {
@@ -18,7 +15,7 @@ public class AlarmMonitor {
 		Intent i = new Intent(context, BatteryInfoReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-				1000 * 60 * 1/10, pi); // Millisec * Second * Minute
+				1000 * 60 * 15, pi); // Millisec * Second * Minute
 	}
 
 	public void CancelAlarm(Context context) {

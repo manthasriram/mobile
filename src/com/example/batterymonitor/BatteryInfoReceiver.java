@@ -1,5 +1,9 @@
 package com.example.batterymonitor;
 
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +11,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 public class BatteryInfoReceiver extends BroadcastReceiver {
-
-	private static final String NOW = "NOW";
-	private static final String PREV = "PREV";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -23,12 +24,17 @@ public class BatteryInfoReceiver extends BroadcastReceiver {
 
 		SharedPreferences.Editor editor = sharedPref.edit();
 
-		int prevLevel = sharedPref.getInt(NOW, 0);
+		Map<String, Integer> levels = (Map<String, Integer>) sharedPref
+				.getAll();
 
-		editor.putInt(NOW, level);
-		editor.putInt(PREV, prevLevel);
+		// Remove the last key as we insert a new one
+		SortedSet<String> sortedKeys = new TreeSet<String>(levels.keySet());
+		if (sortedKeys.size() >= 10) {
+			editor.remove(sortedKeys.first());
+		}
+
+		editor.putInt(String.valueOf(System.currentTimeMillis()), level);
 
 		editor.commit();
 	}
-
 }

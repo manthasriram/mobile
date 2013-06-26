@@ -1,12 +1,20 @@
 package com.example.batterymonitor;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Monitor extends Activity {
@@ -27,10 +35,37 @@ public class Monitor extends Activity {
 
 		TextView v = (TextView) findViewById(R.id.level);
 
-		if (sharedPref.contains("NOW")) {
-			Log.i("test", "String found");
-			v.setText("Current level : "
-					+ String.valueOf(sharedPref.getInt("NOW", 0)) + " %");
+		Map<String, Integer> levels = (Map<String, Integer>) sharedPref
+				.getAll();
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a");
+
+		SortedSet<String> sortedLevelsKeys = null;
+
+		if (levels != null && !levels.isEmpty()) {
+
+			ArrayList<String> displayLevels = new ArrayList<String>();
+
+			sortedLevelsKeys = new TreeSet<String>(levels.keySet());
+
+			for (String time : sortedLevelsKeys) {
+				try {
+					Date d = new Date(Long.parseLong(time));
+					displayLevels.add(dateFormat.format(d) + " - "
+							+ levels.get(time) + "%");
+				} catch (Exception e) {
+
+				}
+			}
+
+			ListView list = (ListView) findViewById(R.id.list);
+			list.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, displayLevels
+							.toArray(new String[displayLevels.size()])));
+
+			v.setText("Current level : " + levels.get(sortedLevelsKeys.last())
+					+ " %");
+
 		} else {
 			v.setText("No Data found !!");
 		}
